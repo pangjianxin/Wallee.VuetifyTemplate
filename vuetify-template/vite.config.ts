@@ -17,7 +17,7 @@ export default defineConfig({
     VueRouter({
       routesFolder: "src/views",
       extensions: [".vue"],
-      exclude: [],
+      exclude: ["src/views/**/components"],
       dts: "./typed-router.d.ts",
     }),
     vue({
@@ -29,12 +29,7 @@ export default defineConfig({
     }),
     AutoImport({
       dts: true,
-      imports: [
-        "vue",
-        "@vueuse/core",
-        "pinia",
-        VueRouterAutoImports,
-      ],
+      imports: ["vue", "@vueuse/core", "pinia", VueRouterAutoImports],
       vueTemplate: true,
     }),
     Layouts({

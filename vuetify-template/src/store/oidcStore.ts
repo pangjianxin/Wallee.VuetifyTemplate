@@ -23,7 +23,7 @@ export type UserDto = {
   email_verified?: boolean;
 };
 
-export default defineStore(
+export const useOidcStore = defineStore(
   "oidc",
   () => {
     const tokenInfo = reactive<OidcState>({
