@@ -46,7 +46,7 @@
                     <v-avatar size="x-small" class="avatar mr-2">
                         <v-img :src="wxtx" alt="陈咩啊"></v-img>
                     </v-avatar>
-                    <span v-if="!mobile">瓦力</span>
+                    <span v-if="!mobile">{{ applicationConfigurationStore.getCUrrentUserName }}</span>
                     <v-menu activator="parent">
                         <v-list nav class="h_a_menu">
                             <v-list-item title="Github" prepend-icon="mdi-github" @click="toGithub" />
@@ -81,9 +81,10 @@ import { routes } from "vue-router/auto/routes";
 import { RouteRecordRaw } from 'vue-router/auto';
 import { useSideMenu } from '@/store/sideMenu';
 import { useMainStore } from '@/store/appMain';
-
+import { useApplicationConfigurationStore } from '@/store/applicationConfigurationStore';
 const sideMenu = useSideMenu();
 const mainStore = useMainStore();
+const applicationConfigurationStore = useApplicationConfigurationStore();
 
 const { rail, sideMenuModel, permanent } = storeToRefs(sideMenu);
 const { theme, mobile } = storeToRefs(mainStore);

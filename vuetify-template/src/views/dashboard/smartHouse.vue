@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-row justify="end">
+    <v-row justify="start">
       1111122
     </v-row>
-    <v-row justify="start">
+    <v-row justify="start" no-gutters>
       111111
     </v-row>
   </div>

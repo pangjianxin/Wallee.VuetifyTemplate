@@ -17,11 +17,11 @@
                         </v-text-field>
                     </div>
                     <v-row justify="end" no-gutters>
-                        <v-btn color="primary" append-icon="mdi-arrow-right" type="submit">
+                        <v-btn color="primary" append-icon="mdi-arrow-right" type="submit" :loading="loading">
                             登录
                         </v-btn>
-                        <v-btn color="warning" append-icon="mdi-arrow-right" @click="handleResetForm" class="ml-2">
-                            登录
+                        <v-btn color="warning" append-icon="mdi-circle-edit-outline" @click="handleResetForm" class="ml-2">
+                            重置
                         </v-btn>
                     </v-row>
                 </v-card>
@@ -60,12 +60,7 @@ import { ApiError } from '@/openapi/core/ApiError';
 const router = useRouter();
 const { storeTokenInfo, storeUserInfo } = useOidcStore();
 const { initConfig } = useApplicationConfigurationStore();
-const {
-    formRef, valid, loading,
-    form,
-    rules,
-    login,
-    getUserInfo } = usePasswordLogin();
+const { formRef, valid, loading, form, rules, login, getUserInfo } = usePasswordLogin();
 
 const handleSubmit = async (e: SubmitEventPromise) => {
     let res = await e;
@@ -89,8 +84,10 @@ const handleResetForm = () => {
 }
 
 onErrorCaptured((err: Error) => {
-    console.log(err);
-    console.log(err instanceof ApiError);
+    if (err instanceof ApiError) {
+        console.log(err.body);
+        console.log(err.message);
+    }
     return false;
 });
 </script>

@@ -50,7 +50,6 @@ export const useApplicationConfigurationStore = defineStore(
           { includeLocalizationResources: false }
         );
       if (config) {
-        console.log(config);
         state.localization = config.localization;
         state.auth = config.auth;
         state.setting = config.setting;
