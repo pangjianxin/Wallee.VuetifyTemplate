@@ -30,6 +30,9 @@ export const useSideMenu = defineStore(
         updateSideMenuModel(!newVal);
         udpatePermanent(!newVal);
         temporary.value = newVal;
+        if (newVal === true) {
+          rail.value = false;
+        }
       }
     );
     return {
