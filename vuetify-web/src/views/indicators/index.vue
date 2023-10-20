@@ -1,11 +1,15 @@
 <template>
   <v-container fluid>
-   
+    <v-btn @click="gotoCreate">create</v-btn>
   </v-container>
 </template>
 
 <script setup lang="ts">
-
+import { Router } from 'vue-router/auto';
+const router: Router = useRouter();
+const gotoCreate = async () => {
+  await router.push({ name: "indicator.create" });
+}
 </script>
 
 <style scoped></style>

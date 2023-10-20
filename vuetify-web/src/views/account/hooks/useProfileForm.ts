@@ -14,9 +14,17 @@ export const useProfileForm = () => {
 
   const profileFormRules = {
     userName: [(value: string) => !!value || `登录用户名必填`],
-    email: [(value: string) => !!value || `邮箱必填`],
+    email: [
+      (value: string) => !!value || `邮箱必填`,
+      (value: string) => {
+        if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+          return true;
+        }
+        return `邮箱格式不正确`;
+      },
+    ],
     name: [(value: string) => !!value || `用户名称必填`],
-    phoneNumber: [(value: string) => !!value || `手机号必填`],
+    phoneNumber: [],
   };
 
   const initProfileInfo = (v: ProfileDto) => {

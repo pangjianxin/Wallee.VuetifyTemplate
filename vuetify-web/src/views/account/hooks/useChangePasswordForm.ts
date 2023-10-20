@@ -17,7 +17,6 @@ export const useChangePasswordForm = () => {
   };
 
   const submitChangePassword = async (e: SubmitEventPromise) => {
-    console.log(e);
     passwordFormValid.value = (await e).valid;
     if (passwordFormValid.value === true) {
       const { setLoading, setSnackbarText } = useGlobalStore();
