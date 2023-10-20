@@ -29,7 +29,15 @@ export default defineConfig({
     }),
     AutoImport({
       dts: true,
-      imports: ["vue", "@vueuse/core", "pinia", VueRouterAutoImports],
+      imports: [
+        "vue",
+        "@vueuse/core",
+        "pinia",
+        VueRouterAutoImports,
+        {
+          "vue-router/auto": ["useLink"],
+        },
+      ],
       vueTemplate: true,
     }),
     Layouts({
@@ -51,6 +59,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "#": fileURLToPath(new URL("./typings", import.meta.url)),
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },

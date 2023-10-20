@@ -14,18 +14,18 @@
     </v-list>
 </template>
 <script lang="ts" setup>
-import { RouteRecordRaw } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router/auto';
 
 let menuInfo = ref<Record<string, RouteRecordRaw[]>>({});
 
+//flat routes
 const recursiveRoute = (routes: RouteRecordRaw[]) => {
     menuInfo.value = {};
-
     let traverse = (route: RouteRecordRaw) => {
         if (route.children) {
             route.children.forEach(child => traverse(child));
         } else {
-            if (route.meta && route.meta.desc && route.meta.visible === true) {
+            if (route.meta && route.meta.desc && route.meta.visible === true && route.meta?.bottomMenu !== true) {
                 if (!menuInfo.value[route.meta.desc as string] || menuInfo.value[route.meta.desc as string].length <= 0) {
                     menuInfo.value[route.meta.desc as string] = [];
                 }

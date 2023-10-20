@@ -1,11 +1,11 @@
 <template>
     <v-layout class="rounded rounded-md v-application" full-height>
         <v-navigation-drawer rounded elevation="1" :rail="rail" expand-on-hover :permanent="permanent"
-            v-model="sideMenuModel" style="position: fixed;">
+            :temporary="temporary" v-model="sideMenuModel">
             <v-list nav>
                 <v-list-item :prepend-avatar="logo" class="mx-1">
-                    <v-list-item-title class="title">Material UI</v-list-item-title>
-                    <v-list-item-subtitle>vue-material-admin</v-list-item-subtitle>
+                    <v-list-item-title class="title">IndicatorReport</v-list-item-title>
+                    <v-list-item-subtitle>普惠金融部指标填报系统</v-list-item-subtitle>
                 </v-list-item>
             </v-list>
             <v-divider></v-divider>
@@ -46,12 +46,11 @@
                     <v-avatar size="x-small" class="avatar mr-2">
                         <v-img :src="wxtx" alt="陈咩啊"></v-img>
                     </v-avatar>
-                    <span v-if="!mobile">{{ applicationConfigurationStore.getCUrrentUserName }}</span>
+                    <span v-if="!mobile">{{ serverConfigStore.getCUrrentUserName }}</span>
                     <v-menu activator="parent">
                         <v-list nav class="h_a_menu">
-                            <v-list-item title="Github" prepend-icon="mdi-github" @click="toGithub" />
-                            <v-list-item title="Email" prepend-icon="mdi-email" @click="toEmail" />
-                            <v-list-item title="Sign out" prepend-icon="mdi-login" to="/login" />
+                            <v-list-item title="我的账户" prepend-icon="mdi-account-edit" @click="toAccount" />
+                            <v-list-item title="退出登录" prepend-icon="mdi-login" to="/login" />
                         </v-list>
                     </v-menu>
                 </v-btn>
@@ -61,53 +60,37 @@
             </div>
         </v-app-bar>
         <v-main scrollable>
-            <v-container fluid>
-                <RouterView />
-            </v-container>
+            <router-view>
+            </router-view>
         </v-main>
-        <v-footer class="d-flex flex-column" app>
-            <div class="py-2 text-center w-100">
-                {{ new Date().getFullYear() }} — <strong>Wallee</strong>
-            </div>
-        </v-footer>
+        <bottomMenuVue :routes="routes"></bottomMenuVue>
     </v-layout>
 </template>
 <script setup lang="ts">
 import logo from '@/assets/admin-logo.png';
-import wxtx from '@/assets/wx.png';
+import wxtx from '@/assets/user.png';
 import Breadcrumbs from '@/components/breadcrumbs/breadcrumbs.vue';
 import recursiveMenu from '@/layouts/components/recursiveMenu.vue';
+import bottomMenuVue from './components/bottomMenu.vue';
 import { routes } from "vue-router/auto/routes";
-import { RouteRecordRaw } from 'vue-router/auto';
+import { RouteRecordRaw, Router } from 'vue-router/auto';
 import { useSideMenu } from '@/store/sideMenu';
-import { useMainStore } from '@/store/appMain';
-import { useApplicationConfigurationStore } from '@/store/applicationConfigurationStore';
+import { useMainStore } from '@/store/appMainStore';
+import { useServerConfigStore } from '@/store/serverConfigStore';
 const sideMenu = useSideMenu();
 const mainStore = useMainStore();
-const applicationConfigurationStore = useApplicationConfigurationStore();
-
-const { rail, sideMenuModel, permanent } = storeToRefs(sideMenu);
+const serverConfigStore = useServerConfigStore();
+const router: Router = useRouter();
+const { rail, sideMenuModel, permanent, temporary } = storeToRefs(sideMenu);
 const { theme, mobile } = storeToRefs(mainStore);
 
 const themeIcon = computed(() => {
     return theme.value === "dark" ? 'mdi-weather-sunny' : 'mdi-weather-night'
-})
-
-const toGithub = () => {
-    window.open('https://github.com/armomu/vue-material-admin', '_blank');
-};
-const toEmail = () => {
-    window.open('mailto:894620576@qq.com', '_blank');
-};
-
-watch(() => mobile.value, (newVal) => {
-    sideMenu.updateSideMenuModel(!newVal);
-    sideMenu.udpatePermanent(!newVal);
 });
 
-onErrorCaptured(err => {
-    console.log(err);
-    return true;
-});
+const toAccount = async () => {
+    await router.push({ name: "account" });
+};
+
 </script>
 <style scoped lang="scss"></style>

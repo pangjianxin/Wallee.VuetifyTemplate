@@ -1,6 +1,8 @@
-import { RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from "vue-router/auto";
 import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
+import { useOidcStore } from "@/store/oidcStore";
+import { useGlobalStore } from "@/store/globalStore";
 
 function recursiveLayouts(route: RouteRecordRaw): RouteRecordRaw {
   if (route.children) {
@@ -25,8 +27,15 @@ const router = createRouter({
   },
 });
 
-router.beforeEach(async (to, _from, next) => {
-  next();
+router.beforeEach((to, from, next) => {
+  const oidcStore = useOidcStore();
+  if (!oidcStore.isTokenValid && to.path != "/login" && to.meta?.requiredAuth) {
+    const globalStore = useGlobalStore();
+    globalStore.setSnackbarText("该页面需要登录");
+    next("/login");
+  } else {
+    next();
+  }
 });
 
 router.afterEach(() => {});

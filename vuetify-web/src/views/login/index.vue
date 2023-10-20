@@ -1,70 +1,53 @@
 <template>
-    <v-card class="login_container">
-        <div class="group">
-            <v-form v-model="valid" ref="formRef" @submit.prevent="handleSubmit">
-                <v-card class="form">
-                    <div class="text-h4 text-center">Hallo!</div>
-                    <div class="mt-4">
-                        <v-text-field label="手机号或者邮箱" placeholder="1111" autocomplete="username" v-model="form.username"
-                            :rules="rules.username" density="compact" variant="outlined" append-inner-icon="mdi-mail">
-                        </v-text-field>
-                    </div>
-                    <div class="my-4">
-                        <v-text-field type="password" autocomplete="current-password" label="密码" variant="outlined"
-                            density="compact" v-model="form.password" :rules="rules.password" append-inner-icon="mdi-lock">
-                        </v-text-field>
-                    </div>
-                    <v-row justify="end" no-gutters>
-                        <v-btn color="primary" append-icon="mdi-arrow-right" type="submit" :loading="loading">
-                            登录
-                        </v-btn>
-                        <v-btn color="warning" append-icon="mdi-circle-edit-outline" @click="handleResetForm" class="ml-2">
-                            重置
-                        </v-btn>
-                    </v-row>
-                </v-card>
-            </v-form>
-
-            <v-card class="desc">
-                <div class="logo mt-4">
-                    <img :src="logo" height="60" />
-                    <div class="text-h5 mt-2">Material UI</div>
-                </div>
-                <div class="mt-4">
-                    vue-material-admin is a free open source mid-backend template based on Vuetify
-                </div>
-                <div class="mt-4">
-                    made with by ❤️
-                    <a target="_blank" style="
-                            color: rgba(
-                                var(--v-theme-on-background),
-                                var(--v-high-emphasis-opacity)
-                            );
-                        " href="https://github.com/jaywoow">
-                        Chen HuaJie
-                    </a>
-                </div>
+    <v-container class="login-container d-flex flex-column  justify-center" fluid>
+        <v-form ref="formRef" v-model="valid" @submit.prevent="handleSubmit">
+            <v-card :prepend-avatar="logo" variant="tonal" color="indigo">
+                <template #title>
+                    <div class="primary--text display-1">Indicator Report</div>
+                </template>
+                <template #subtitle>
+                    普惠金融部指标报送
+                </template>
+                <template #text>
+                    <v-text-field label="用户名" placeholder="用户名一般是你的员工号" autocomplete="off" v-model="form.username"
+                        :rules="rules.username" density="compact" variant="outlined" append-inner-icon="mdi-mail">
+                    </v-text-field>
+                    <v-text-field type="password" placeholder="密码" autocomplete="off" label="密码" variant="outlined"
+                        density="compact" v-model="form.password" :rules="rules.password" append-inner-icon="mdi-lock" class="mt-5">
+                    </v-text-field>
+                </template>
+                <template #actions>
+                    <v-spacer />
+                    <v-btn color="secondary" append-icon="mdi-arrow-right" type="submit">
+                        登录
+                    </v-btn>
+                    <v-btn color="warning" append-icon="mdi-circle-edit-outline" @click="handleResetForm" class="ml-2">
+                        重置
+                    </v-btn>
+                </template>
             </v-card>
-        </div>
-    </v-card>
+        </v-form>
+    </v-container>
 </template>
 <script lang="ts" setup>
 import logo from '@/assets/admin-logo.png';
 import { usePasswordLogin } from './hooks/usePasswordLogin';
 import { useOidcStore } from '@/store/oidcStore';
 import { SubmitEventPromise } from 'vuetify';
-import { useApplicationConfigurationStore } from "@/store/applicationConfigurationStore";
-import { ApiError } from '@/openapi/core/ApiError';
+import { useServerConfigStore } from "@/store/serverConfigStore";
+import { useGlobalStore } from '@/store/globalStore';
+
 const router = useRouter();
 const { storeTokenInfo, storeUserInfo } = useOidcStore();
-const { initConfig } = useApplicationConfigurationStore();
-const { formRef, valid, loading, form, rules, login, getUserInfo } = usePasswordLogin();
+const { initConfig } = useServerConfigStore();
+const { formRef, valid, form, rules, login, getUserInfo } = usePasswordLogin();
+const globalStore = useGlobalStore();
 
 const handleSubmit = async (e: SubmitEventPromise) => {
     let res = await e;
     if (res.valid === true) {
         try {
-            loading.value = true;
+            globalStore.setLoading(true);
             let tokenRes = await login(form);
             storeTokenInfo(tokenRes);
             let userRes = await getUserInfo();
@@ -72,7 +55,7 @@ const handleSubmit = async (e: SubmitEventPromise) => {
             await initConfig();
             await router.push({ path: "/" });
         } finally {
-            loading.value = false;
+            globalStore.setLoading(false);
         }
     }
 }
@@ -81,74 +64,12 @@ const handleResetForm = () => {
     formRef?.value.reset();
 }
 
-onErrorCaptured((err: Error) => {
-    if (err instanceof ApiError) {
-        console.log(err.body);
-        console.log(err.message);
-    }
-    return false;
-});
 </script>
 <style lang="scss" scoped>
-.login_container {
+.login-container {
     height: 100vh;
-    overflow-y: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.5s;
-    position: relative;
-    overflow: hidden;
-
-    .group {
-        display: flex;
-        position: relative;
-        z-index: 1;
-        border-radius: 20px;
-        overflow: hidden;
-
-        .form {
-            width: 360px;
-            margin: 0 auto;
-            height: 400px;
-            padding: 60px;
-
-            .title {
-                font-size: 36px;
-                font-weight: 700;
-                font-family: Roboto, sans-serif !important;
-                margin-bottom: 20px;
-            }
-        }
-
-        .desc {
-            height: 100%;
-            margin: 0 auto;
-            width: 360px;
-            background-image: linear-gradient(to bottom, #d4e5f5, #e1edf3);
-            height: 400px;
-            padding: 60px;
-            text-align: center;
-
-            .logo {
-                text-align: center;
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 778px) {
-    .login_container {
-        .group {
-            .form {
-                background: transparent;
-            }
-
-            .desc {
-                display: none;
-            }
-        }
-    }
+    background-image: url("/src/assets/login_bg2.png");
+    background-size: 100% 100%;
 }
 </style>
 <route lang="yaml">
@@ -157,7 +78,7 @@ meta:
   title: 登录
   desc: 系统功能
   icon: mdi-login
-  visible: true
+  visible: false
   requiredAuth: true
   layout: empty
 </route>

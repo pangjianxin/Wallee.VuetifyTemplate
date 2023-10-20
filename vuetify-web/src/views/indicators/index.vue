@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    index
+   
   </v-container>
 </template>
 
@@ -10,11 +10,12 @@
 
 <style scoped></style>
 <route lang="yaml">
-name: index1
+name: indicator.index
 meta: 
-  icon: mdi-home
+  title: 指标查询
+  desc: 指标管理
   visible: true
+  bottomMenu: true
   requiredAuth: true
-  title: 系统首页
-  desc: 系统管理
+  icon: mdi-format-list-bulleted
 </route>

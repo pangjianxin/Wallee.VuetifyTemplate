@@ -12,7 +12,6 @@ export interface PasswordLogin {
 
 export const usePasswordLogin = () => {
   const formRef = ref();
-  const loading = ref(false);
   const valid = ref(false);
   const form = reactive<PasswordLogin>({
     username: "",
@@ -65,7 +64,6 @@ export const usePasswordLogin = () => {
   }
 
   return {
-    loading,
     formRef,
     valid,
     form,

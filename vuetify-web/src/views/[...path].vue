@@ -2,26 +2,21 @@
     <div class="wscn-http404-container">
         <div class="wscn-http404">
             <div class="pic-404">
-                <img class="pic-404__parent" src="../../assets/404_images/404.png" alt="404" />
-                <img class="pic-404__child left" src="../../assets/404_images/404_cloud.png" alt="404" />
-                <img class="pic-404__child mid" src="../../assets/404_images/404_cloud.png" alt="404" />
-                <img class="pic-404__child right" src="../../assets/404_images/404_cloud.png" alt="404" />
+                <img class="pic-404__parent" src="/src/assets/404.png" alt="404" />
+                <img class="pic-404__child left" src="/src/assets/404.png" alt="404" />
+                <img class="pic-404__child mid" src="/src/assets/404.png" alt="404" />
+                <img class="pic-404__child right" src="/src/assets/404.png" alt="404" />
             </div>
             <div class="bullshit">
-                <div class="bullshit__info">Page is missing</div>
-                <div class="bullshit__info">Please check that the URL you entered is correct</div>
-                <RouterLink class="bullshit__return-home" to="/">Back home</RouterLink>
+                <div class="bullshit__info">页面丢了...</div>
+                <div class="bullshit__info">请确认该页面URL是否存在或者联系管理员</div>
+                <RouterLink class="bullshit__return-home" to="/">退回首页</RouterLink>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-import { RouterLink } from 'vue-router';
-// import router from '@/router';
-
-//     setTimeout(() => {
-//         router.push('/');
-//     }, 1000);
+import { RouterLink } from 'vue-router/auto';
 </script>
 <style lang="scss" scoped>
 .wscn-http404-container {

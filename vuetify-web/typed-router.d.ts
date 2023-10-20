@@ -41,9 +41,10 @@ declare module 'vue-router/auto/routes' {
   export interface RouteNamedMap {
     'index1': RouteRecordInfo<'index1', '/', Record<never, never>, Record<never, never>>,
     'not-found': RouteRecordInfo<'not-found', '/:path(.*)', { path: ParamValue<true> }, { path: ParamValue<false> }>,
-    'dashboard.smart-house': RouteRecordInfo<'dashboard.smart-house', '/dashboard/smartHouse', Record<never, never>, Record<never, never>>,
-    'xxx': RouteRecordInfo<'xxx', '/dashboard/test', Record<never, never>, Record<never, never>>,
-    'no-not-found': RouteRecordInfo<'no-not-found', '/feedback/no', Record<never, never>, Record<never, never>>,
+    'account': RouteRecordInfo<'account', '/account', Record<never, never>, Record<never, never>>,
+    'indicator.mine': RouteRecordInfo<'indicator.mine', '/indicatorReports/myIndicator', Record<never, never>, Record<never, never>>,
+    'indicator.report': RouteRecordInfo<'indicator.report', '/indicatorReports/report', Record<never, never>, Record<never, never>>,
+    'indicator.index': RouteRecordInfo<'indicator.index', '/indicators', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
   }
 }
