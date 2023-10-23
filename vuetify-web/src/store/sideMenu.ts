@@ -26,7 +26,7 @@ export const useSideMenu = defineStore(
 
     watch(
       () => mainStore.mobile,
-      (newVal) => {
+      (newVal: boolean) => {
         updateSideMenuModel(!newVal);
         udpatePermanent(!newVal);
         temporary.value = newVal;

@@ -1,7 +1,7 @@
 <template>
     <v-bottom-navigation v-model="selectedRoute" color="teal" grow absolute>
-        <template v-for="menu in menuInfo" :key="menu.route">
-            <v-btn :value="menu.route">
+        <template v-for="menu in menus" :key="menu.route">
+            <v-btn :value="menu.routeName">
                 <v-icon>{{ menu.icon }}</v-icon>
                 {{ menu.title }}
             </v-btn>
@@ -10,58 +10,21 @@
 </template>
 
 <script setup lang="ts">
-import { Router, RouteRecordRaw } from "vue-router/auto";
-interface BottomMenu {
-    icon: string,
-    route: string,
-    path: string,
-    title: string
-}
-
-let menuInfo = ref<BottomMenu[]>([]);
+import router from '@/router';
+import { MenuInfo } from 'typings/env';
 
 let selectedRoute: Ref<string> = ref("");
 
-const router: Router = useRouter();
-
-let props = defineProps({
-    routes: {
-        type: Array<RouteRecordRaw>,
+defineProps({
+    menus: {
+        type: Array<MenuInfo>,
         required: true
     }
 });
 
-const recursiveRoute = (routes: RouteRecordRaw[]) => {
-    menuInfo.value = [];
-    let traverse = (route: RouteRecordRaw) => {
-        if (route.children) {
-            route.children.forEach(child => traverse(child));
-        } else {
-            if (route.meta && route.meta.visible === true && route.meta?.bottomMenu === true) {
-                menuInfo.value.push({
-                    icon: route.meta?.icon!,
-                    title: route.meta?.title!,
-                    route: route.name?.toString()!,
-                    path: route.path
-                })
-            }
-        }
-    }
-    routes.forEach(route => traverse(route));
-}
-
 const navigateTo = async (routeName: string) => {
-    await router.replace({ name: routeName });
+    await router.push({ name: routeName });
 }
-
-watch(() => props.routes,
-    (newVal) => {
-        recursiveRoute(newVal)
-    },
-    {
-        deep: true,
-        immediate: true
-    });
 
 watch(
     () => selectedRoute.value,

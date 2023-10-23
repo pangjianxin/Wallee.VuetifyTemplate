@@ -46,6 +46,7 @@ declare module 'vue-router/auto/routes' {
     'indicator.report': RouteRecordInfo<'indicator.report', '/indicatorReports/report', Record<never, never>, Record<never, never>>,
     'indicator.index': RouteRecordInfo<'indicator.index', '/indicators', Record<never, never>, Record<never, never>>,
     'indicator.create': RouteRecordInfo<'indicator.create', '/indicators/create', Record<never, never>, Record<never, never>>,
+    'indicator.update': RouteRecordInfo<'indicator.update', '/indicators/update/:indicatorId', { indicatorId: ParamValue<true> }, { indicatorId: ParamValue<false> }>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
   }
 }

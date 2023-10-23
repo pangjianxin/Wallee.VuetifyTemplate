@@ -35,7 +35,7 @@ export default defineConfig({
         "pinia",
         VueRouterAutoImports,
         {
-          "vue-router/auto": ["useLink"],
+          "vue-router/auto": ["useLink", "createRouter", "createWebHistory"],
         },
       ],
       vueTemplate: true,

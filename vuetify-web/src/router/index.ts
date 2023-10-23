@@ -1,10 +1,8 @@
-import { RouteRecordRaw } from "vue-router/auto";
-import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
 import { useOidcStore } from "@/store/oidcStore";
 import { useGlobalStore } from "@/store/globalStore";
 
-function recursiveLayouts(route: RouteRecordRaw): RouteRecordRaw {
+function recursiveLayouts(route: typeof RouteRecordRaw): typeof RouteRecordRaw {
   if (route.children) {
     for (let i = 0; i < route.children.length; i++) {
       route.children[i] = recursiveLayouts(route.children[i]);
@@ -15,7 +13,7 @@ function recursiveLayouts(route: RouteRecordRaw): RouteRecordRaw {
   return setupLayouts([route])[0];
 }
 const router = createRouter({
-  extendRoutes: (routes: RouteRecordRaw[]) => {
+  extendRoutes: (routes: (typeof RouteRecordRaw)[]) => {
     const mappedRoutes = routes.map((route) => {
       return recursiveLayouts(route);
     });
@@ -27,7 +25,7 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to: any, from: any, next: any) => {
   const oidcStore = useOidcStore();
   if (!oidcStore.isTokenValid && to.path != "/login" && to.meta?.requiredAuth) {
     const globalStore = useGlobalStore();

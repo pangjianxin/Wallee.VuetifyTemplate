@@ -1,5 +1,4 @@
 // / <reference types="vite/client" />
-import "vue-router/auto";
 declare module "vue-router" {
   interface RouteMeta {
     // 是否需要认证
@@ -18,3 +17,30 @@ declare module "vue-router" {
     bottomMenu?: boolean;
   }
 }
+
+declare module "vue-router/auto/routes" {
+  import type {
+    RouteRecordInfo,
+    ParamValue,
+    // these are other param helper types
+    //ParamValueOneOrMore,
+    //ParamValueZeroOrMore,
+    //ParamValueZeroOrOne,
+  } from "unplugin-vue-router";
+
+  export interface RouteNamedMap {
+    "indicator.update": RouteRecordInfo<
+      "indicator.update",
+      "/indicators/update/[indicatorId]",
+      { indicatorId: ParamValue<string> },
+      { indicatorId: ParamValue<string> }
+    >;
+  }
+}
+
+export type MenuInfo = {
+  icon: string;
+  title: string;
+  routeName: string;
+  path: string;
+};

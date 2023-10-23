@@ -9,13 +9,13 @@
                 </v-list-item>
             </v-list>
             <v-divider></v-divider>
-            <recursiveMenu :routes="(routes as Array<RouteRecordRaw>)"></recursiveMenu>
+            <sideMenu :menus="menuList.sideMenuList"></sideMenu>
         </v-navigation-drawer>
         <v-app-bar rounded elevation="1">
             <!--面包屑-->
             <Breadcrumbs v-if="!mobile" />
             <!--切换rail-->
-            <div v-if="!mobile" @click="sideMenu.switchRail">
+            <div v-if="!mobile" @click="sideMenuStore.switchRail">
                 <v-icon
                     :icon="rail === true ? 'mdi-arrow-right-bold-circle-outline' : 'mdi-arrow-left-bold-circle-outline'" />
             </div>
@@ -24,15 +24,15 @@
                 <div class="head_logo ml-4 mr-1">
                     <img :src="logo" height="40" />
                 </div>
-                <v-btn variant="text" icon="mdi-menu" @click="sideMenu.switchSideMenuModel">
-                </v-btn>
+                <v-app-bar-nav-icon @click="sideMenuStore.switchSideMenuModel"></v-app-bar-nav-icon>
             </template>
 
             <v-spacer></v-spacer>
             <!--搜索框-->
             <div v-if="!mobile" style="width: 220px" class="search_ip mr-2">
                 <v-text-field rounded density="compact" variant="outlined" label="Search here"
-                    prepend-inner-icon="mdi-magnify" single-line hide-details clearable></v-text-field>
+                    prepend-inner-icon="mdi-magnify" single-line hide-details clearable>
+                </v-text-field>
             </div>
             <!--右侧工具栏-->
             <div class="d-flex flex-row align-center">
@@ -44,12 +44,12 @@
                 </v-btn>
                 <v-btn variant="text" append-icon="mdi-chevron-down" class="mr-2">
                     <v-avatar size="x-small" class="avatar mr-2">
-                        <v-img :src="wxtx" alt="陈咩啊"></v-img>
+                        <v-img :src="wxtx" alt="wallee"></v-img>
                     </v-avatar>
                     <span v-if="!mobile">{{ serverConfigStore.getCUrrentUserName }}</span>
                     <v-menu activator="parent">
-                        <v-list nav class="h_a_menu">
-                            <v-list-item title="我的账户" prepend-icon="mdi-account-edit" @click="toAccount" />
+                        <v-list nav>
+                            <v-list-item title="我的账户" prepend-icon="mdi-account-edit" @click="gotoAccount" />
                             <v-list-item title="退出登录" prepend-icon="mdi-login" to="/login" />
                         </v-list>
                     </v-menu>
@@ -63,34 +63,73 @@
             <router-view>
             </router-view>
         </v-main>
-        <bottomMenuVue :routes="routes"></bottomMenuVue>
+        <bottomMenuVue :menus="menuList.bottomMenuList"></bottomMenuVue>
     </v-layout>
 </template>
 <script setup lang="ts">
 import logo from '@/assets/admin-logo.png';
 import wxtx from '@/assets/user.png';
 import Breadcrumbs from '@/components/breadcrumbs/breadcrumbs.vue';
-import recursiveMenu from '@/layouts/components/recursiveMenu.vue';
+import sideMenu from '@/layouts/components/sideMenu.vue';
 import bottomMenuVue from './components/bottomMenu.vue';
-import { routes } from "vue-router/auto/routes";
-import { RouteRecordRaw, Router } from 'vue-router/auto';
 import { useSideMenu } from '@/store/sideMenu';
 import { useMainStore } from '@/store/appMainStore';
 import { useServerConfigStore } from '@/store/serverConfigStore';
-const sideMenu = useSideMenu();
+import { RouteRecordRaw } from 'vue-router';
+import { MenuInfo } from 'typings/env';
+import { routes } from "vue-router/auto/routes";
+
+const sideMenuStore = useSideMenu();
 const mainStore = useMainStore();
 const serverConfigStore = useServerConfigStore();
-const router: Router = useRouter();
-const { rail, sideMenuModel, permanent, temporary } = storeToRefs(sideMenu);
+const router = useRouter();
+const { rail, sideMenuModel, permanent, temporary } = storeToRefs(sideMenuStore);
 const { theme, mobile } = storeToRefs(mainStore);
 
 const themeIcon = computed(() => {
     return theme.value === "dark" ? 'mdi-weather-sunny' : 'mdi-weather-night'
 });
 
-const toAccount = async () => {
+const gotoAccount = async () => {
     await router.push({ name: "account" });
 };
+
+const menuList = computed(() => {
+    let sideMenuList: Record<string, MenuInfo[]> = {};
+    let bottomMenuList: Array<MenuInfo> = [];
+    let traverse = (route: RouteRecordRaw) => {
+        if (route.children && route.children.length > 0) {
+            route.children.forEach((child) => traverse(child));
+        } else {
+            if (route.meta?.visible === true) {
+                if (route.meta?.bottomMenu === true) {
+                    bottomMenuList.push({
+                        icon: route.meta.icon!,
+                        title: route.meta.title!,
+                        routeName: route.name?.toString()!,
+                        path: route.path
+                    })
+                }
+                else {
+                    if (!sideMenuList[route.meta.desc as string]) {
+                        sideMenuList[route.meta.desc as string] = [];
+                    }
+                    sideMenuList[route.meta.desc as string].push({
+                        title: route.meta.title as string,
+                        routeName: route.name as string,
+                        icon: route.meta.icon as string,
+                        path: route.path
+                    });
+                }
+            }
+        }
+    }
+    routes.forEach(route => traverse(route));
+    return {
+        sideMenuList,
+        bottomMenuList
+    };
+})
 
 </script>
 <style scoped lang="scss"></style>

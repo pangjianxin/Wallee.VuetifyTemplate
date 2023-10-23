@@ -25,18 +25,13 @@
                 </div>
             </div>
             <v-divider></v-divider>
-            <v-toolbar color="transparent" class="px-0">
-                <v-app-bar-nav-icon>
-                </v-app-bar-nav-icon>
-                <v-toolbar-title>修改你的信息</v-toolbar-title>
-                <template v-slot:extension>
-                    <v-tabs v-model="selectedTab" color="primary" grow>
-                        <v-tab v-for="(item, index) in tabs" :key="index">
-                            {{ item }}
-                        </v-tab>
-                    </v-tabs>
-                </template>
-            </v-toolbar>
+            
+            <v-tabs v-model="selectedTab" color="primary" grow>
+                <v-tab v-for="(item, index) in tabs" :key="index">
+                    <v-icon>mdi-cog</v-icon>
+                    &nbsp;{{ item }}
+                </v-tab>
+            </v-tabs>
 
             <v-window :model-value="selectedTab">
                 <v-window-item value="基础信息">
